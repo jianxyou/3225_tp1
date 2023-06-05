@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File d'attente</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center my-4">File d'attente</h1>
+        <div class="row">
+            <div class="col-lg-6 offset-lg-3">
+                <button class="btn btn-primary mb-3" type="button" onclick="showInput()">+</button>
+                <div id="inputGroup" style="display: none;" class="input-group mb-3">
+                    <input type="text" id="nomUtilisateur" class="form-control" placeholder="Entrez votre nom">
+                    <div class="input-group-append">
+                        <button class="btn btn-success" type="button" onclick="ajouterDansFile()">Ajouter</button>
+                    </div>
+                </div>
+                <ul class="list-group" id="file">
+                    <!-- Les noms des utilisateurs seront ajoutés ici -->
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+    <script>
+        let file = [];
+
+        function showInput() {
+            document.getElementById('inputGroup').style.display = 'flex';
+        }
+
+        function ajouterDansFile() {
+            const nom = document.getElementById('nomUtilisateur').value;
+            if(nom) {
+                file.push({nom, commentaire: ''});
+                majAffichage();
+            }
+            document.getElementById('nomUtilisateur').value = '';
+            document.getElementById('inputGroup').style.display = 'none';
+        }
+
+        function majAffichage() {
+            const liste = document.getElementById('file');
+            liste.innerHTML = '';
+            file.forEach((utilisateur, index) => {
+                const li = document.createElement('li');
+                li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                li.innerHTML = `
+                    ${utilisateur.nom} 
+                    <span class="badge badge-primary badge-pill">${utilisateur.commentaire}</span>
+                    <div>
+                        <button class="btn btn-danger btn-sm mr-2" onclick="supprimer(${index})">Supprimer</button>
+                        <button class="btn btn-info btn-sm" onclick="ajouterCommentaire(${index})">Ajouter Commentaire</button>
+                    </div>
+                `;
+                liste.appendChild(li);
+            });
+        }
+
+        function supprimer(index) {
+            file.splice(index, 1);
+            majAffichage();
+        }
+
+        function ajouterCommentaire(index) {
+            const commentaire = prompt('Entrez votre commentaire');
+            if(commentaire) {
+                file[index].commentaire = commentaire;
+                majAffichage();
+            }
+        }
+    </script>
+</body>
+</html>
